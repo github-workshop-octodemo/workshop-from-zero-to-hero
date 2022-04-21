@@ -52,7 +52,7 @@ To simplify the process, we will use a public container image. *It is obsviously
 
 1. Go to your repository home page (Code tab)
 
-2. In the right menu click on your container, under the **Packages** section  ![](../images/img-046.png)
+2. In the right menu click on your container, under the **Packages** section  ![](../images/img-047.png)
 
 
 3. On the package page, click on **Packages Settings** 
@@ -82,6 +82,8 @@ You can either copy the file, or create the fie using the following steps:
 ### 1 - Create a new workflow file `.github/workflows/release.yml`
 
 (using Web IDE, Codespaces, or local IDE), name it:
+
+- `.github/workflows/release.yml`
   
 
 ### 2 - Enter the name and event that trigger the workflow
@@ -201,15 +203,34 @@ deploy_to_kubernetes:
 Your release workflow is now complete.
 
 
-### 5- Commit and Push to main
+5- Commit and Push to main
 
 You can now commit and push your code. 
 
 ## 3 - Create a new release
 
+1- Go to the project home page, in the right menu click on "Release"
+    ![](../images/img-049.png)
+
+2- Clicc "Create a new release"
+
+3- Use a Tag and generate release notes.
+
+4- Click "Publish Release". This will run the workflow you have created before
+
 ## 4 - Test the new deployed application
 
+The workflow will package and deploy the application to your Kubernetes.
 
+The application is deployed in the `workflow` namespace.
+
+You can list the services, that exposes the application in this namespace using the Azure Portal or using the command line:
+
+```
+kubectl get services -n workshop
+```
+
+You can use the Public IP Address and port to access the application.
 
 ## Conclusion
 
