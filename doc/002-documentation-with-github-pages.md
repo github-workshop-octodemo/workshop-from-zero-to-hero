@@ -45,21 +45,8 @@ Using a **new Codespaces**, or the editor create a new file with some markdown c
     
     ![Settings](../images/img-009.png)
 
-- If you scroll down on the settings page, you'll see the **GitHub Pages** section near the bottom. Click the **Choose a theme** button to start the process of creating your site.
 
-    ![launch-theme-chooser](https://docs.github.com/assets/cb-62512/images/help/pages/choose-theme.png)
-
-- Once you've clicked the button, you'll be directed to the Theme Chooser. You'll see several theme options in a carousel across the top of the page. Click on the images to preview the themes. Once you've selected one, click **Select theme** on the right to move on. It's easy to change your theme later, so if you're not sure, just choose one for now.
-
-    ![theme-chooser](https://docs.github.com/assets/cb-180181/images/help/pages/select-theme.png)
-
-
-- Click on the link at the top of the page to see your page
-
-- You can change the Them and refresh your page, to see the changes (force refresh)
-
-    When you change the theme a new file is added: `/docs/_config.yml`
-
+    GitHub is now using GitHub Actions to build and publish the pages, you can go to the "Actions" tab of you repository to see the process.
 
 ---
 ### 3 Making changes
@@ -69,7 +56,7 @@ Using a **new Codespaces**, or the editor create a new file with some markdown c
 - You can also change the title and description, edit the `/docs/_config.yml` file with the following content:
 
     ```yml
-    theme: jekyll-theme-minimal
+    theme: merlot
     title: "<YOUR NNAME> - project homepage"
     description: "Great documentation about my project!"
     ```
@@ -77,6 +64,9 @@ Using a **new Codespaces**, or the editor create a new file with some markdown c
 - When you're done, click **Commit changes** and your updates will go live in just a few seconds!
     
     
+You can find more informations on the page:
+- [Adding a theme to your GitHub Pages site using Jekyll](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/adding-a-theme-to-your-github-pages-site-using-jekyll)
+
 ## Conclusion Lab 2
 
 In this lab you have learned, how to:

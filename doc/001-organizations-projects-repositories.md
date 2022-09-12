@@ -94,7 +94,7 @@ $ git branch
 * your-user/issue1
 ```
 
-You are not on your "feature branch", where you will be modifying code.
+You are now on your "feature branch", where you will be modifying code.
 
 
 **Initialize node project with npm.**
@@ -103,10 +103,10 @@ In Codespace terminal run the following commands to initialize your `node.js` pr
 
 
 ```bash
-$ npm init
+$ npm init -y
 ```
 
-Keep all the defaults
+Let's now code the application.
 
 
 **Install Express dependencies**
@@ -117,7 +117,7 @@ $ npm install express --save
 
 **Create the index.js**
 
-Click on the "Expore" ![Explore](../images/button-explore.png?raw=true "Explore") button in the tool bar.
+Click on the "Explore" ![Explore](../images/button-explore.png?raw=true "Explore") button in the tool bar.
 
 Using the IDE create a new file names `index.js` and add the following content:
 
