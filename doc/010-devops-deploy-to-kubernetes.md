@@ -1,4 +1,4 @@
-# 10 - Deploy to Kubernetes with GitHub Actionss
+# 10 - Deploy to Kubernetes with GitHub Actions
 
 In this lab you will create a new Workflow that deploy the Node.js application as a service to Kubernetes.
 
@@ -199,13 +199,16 @@ You can now commit and push your code.
 
 The workflow will package and deploy the application to your Kubernetes.
 
-The application is deployed in the `<your0github-handle>` namespace.
+
+The application is deployed in the `<your-github-handle>` namespace.
 
 You can list the services, that exposes the application in this namespace using the Azure Portal or using the command line:
 
 ```
 kubectl get services -n <your-github-handle>
 ```
+
+If you do not have access to the CLI you can look in the GitHub Workflow logs, where the URL to the service is printed.
 
 You can use the Public IP Address and port to access the application.
 

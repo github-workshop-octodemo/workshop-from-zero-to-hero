@@ -67,4 +67,4 @@ In this lab you have learned how to:
 ---
 
 Next : 
-  - **[Conclusion](099-conclusion.md)**
+  - **[Deploy to Kubernetes with GitHub Actions](010-devops-deploy-to-kubernetes.md)**
