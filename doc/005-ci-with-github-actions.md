@@ -137,9 +137,19 @@ The approach is quite simple with GitHub Actions, you decide where/when you want
 
 1. In the `main` branch, edit the CI workdlow `.github/workflows/node.js.yml`
 
-2. Add a new steps in the `build` job
+2. Add a new job to create a Test Coverage report
   ```yml
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+ coverage:
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v3
+          - uses: ArtiomTr/jest-coverage-report-action@v2
+            id: coverage
+            with:
+                output: report-markdown
+          - uses: marocchino/sticky-pull-request-comment@v2
+            with:
+                message: ${{ steps.coverage.outputs.report }}
   ```
 
 3. Commit the `node.js.yml` file.
