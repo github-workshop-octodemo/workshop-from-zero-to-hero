@@ -40,7 +40,7 @@ You can see this alert box in your project:
 3. The dependabot alert provides information to help you understand the source of the problem, and how to remediate.
 
 
-### Remediate with Dependabot Pull Request
+### 2.1 - Remediate with Dependabot Pull Request
 
 When Dependabot finds a security alert, it creates a new Pull Request automatically with the fixed versionfo the library you are using.
 
