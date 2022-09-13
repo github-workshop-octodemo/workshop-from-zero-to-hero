@@ -175,7 +175,7 @@ jobs:
             sleep 20s
             IP_SERVICE=$(kubectl get services -n ${{ github.actor }}  -o json | jq -r '.items[] | select(.metadata.name == "hello-world-node") | .status.loadBalancer?|.ingress[]?|.ip')
             echo "IP_SERVICE=$IP_SERVICE" >> $GITHUB_ENV
-            echo "🏁 - Service ${{ github.repository }} update in ${{github.actor}} : http://$IP_SERVICE:8080 "            
+            echo "🏁 - Service ${{ github.repository }} update in ${{github.actor}} : http://$IP_SERVICE:3000 "            
 
 ```
 </details>
