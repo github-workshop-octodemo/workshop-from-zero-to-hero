@@ -25,6 +25,10 @@ jobs:
       # Build node application
       - ...
         ...
+
+  coverage:
+    ...
+
   publish-container:
     # Depends of build
     needs: build

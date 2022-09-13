@@ -41,11 +41,24 @@ GitHub has recognized the Google API Key
 ![](../images/img-042.png)
 
 
+## 3- Push Protection
+
+You can use secret scanning to prevent supported secrets from being pushed into your organization or repository by enabling push protection.
+
+Go in the `Settings` tab of your project in the `Code security and analysis` page and enable "Push protection"  under the "Secret scanning" section.
+
+Add the following string to your code, commit and push this commit:
+
+```js
+const af = "aio_MtXK444XX8zwjZ13vXbAoJ4vmJxh";
+```
+
+Your push should be refused as it contains a recognized secret pattern ( [Supported secrets for push protection](https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/secret-scanning-patterns#supported-secrets-for-push-protection))
+
+## Conclusion
 
 > Note : if your repositoruy is Public the behavior is different as you can see in the [documentation](https://docs.github.com/en/enterprise-cloud@latest/code-security/secret-scanning/about-secret-scanning#about-secret-scanning-for-public-repositories).
 
-
-## Conclusion
 
 In this lab you have learned how to:
 
@@ -54,4 +67,4 @@ In this lab you have learned how to:
 ---
 
 Next : 
-  - **[DevOps: Deploy to Kubernetes](010-devops-deploy-to-kubernetes.md)**
+  - **[Conclusion](099-conclusion.md)**
