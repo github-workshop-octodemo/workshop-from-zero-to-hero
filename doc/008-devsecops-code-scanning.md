@@ -128,7 +128,7 @@ This issue is captured and will be available for later fix.
 
 ### 3.2 - Remediate the High Severity Alert
 
-This issue should be fix ***"now"!***
+This issue should be fixed ***"now"!***
 
 1. Go back to the PR, in the details of the **Incomplete regular expression for hostnames** alert.
 
