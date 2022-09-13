@@ -85,43 +85,28 @@ You can either copy the file, or create the fie using the following steps:
 
 - `.github/workflows/release.yml`
   
+The following workflow:
 
-### 2 - Enter the name and event that trigger the workflow
+- is triggered by a new release
+- push a new container image
+- connect to Azure
+- use `kubectl` to create a namespace and deploy the application
 
-This workflow should be executed when a new [release](https://docs.github.com/en/enterprise-cloud@latest/repositories/releasing-projects-on-github/managing-releases-in-a-repository) is created.
+<details>
+<summary>Complete workflow, copy and paste the code to `.github/workflows/release.yml`</summary>
 
-Add the following section to your file:
-
-```yml
+```yaml
 name: 📦 Release and Deploy
 on:
   release:
     types: [created]
-```
-
-### 3- Define environment variables
-
-Add the following section with some environment variable that will be used in the workflow.
-
-Adapt the Azure resource group, with your own environment, the image and image with tag names are based on GitHub Container Registry (`ghcr.io`) and repository name.
-
-This section also use the git tag name (_release name_) as tag: `${{ github.event.release.tag_name }}`
-
-```yml
+    
 env:
-  AZ_RESOURCE_GROUP: "RG-AKSCluster" # Name of your Azure resource group
-  AZ_CLUSTER_NAME: "AKS-000" # name of your kubernetes cluster in Azure
+  AZ_RESOURCE_GROUP: "tgrall-demo" # Name of your Azure resource group
+  AZ_CLUSTER_NAME: "tug-kube" # name of your kubernetes cluster in Azure
   IMAGE_NAME: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
-  IMAGE_NAME_WITH_TAG: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
-```
-
-### 4- Build and publish the image 
-
-Let's add, the `jobs` section and a job to build and run.
-
-This is similar to what has been done in previous labs, just using a different tag.
-
-```yaml
+  IMAGE_NAME_WITH_TAG: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}    
+  
 jobs:
 
   build_and_publish:
@@ -151,59 +136,51 @@ jobs:
           tags: |
             ${{env.IMAGE_NAME}}
             ${{env.IMAGE_NAME_WITH_TAG}}
+            
+  deploy_to_kubernetes:
+      name: "🌩️ - Deploy to Kubernetes"            
+      needs: build_and_publish
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+
+      steps:
+
+        - uses: actions/checkout@v2
+
+        # login to azure
+        - name: Login to Azure
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+        # get kubernetes credentials/context    
+        - name: Get AKS Credentials
+          id: getContext
+          run: |
+            az aks get-credentials --resource-group ${{ env.AZ_RESOURCE_GROUP }} --name ${{ env.AZ_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/kubeconfig
+            echo "KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig" >> $GITHUB_ENV
+        - name: "Escaping Image Name"
+          run: |
+            IMAGE_NAME_ESC=$(echo $IMAGE_NAME_WITH_TAG | sed 's/\//\\\//g')
+            echo "IMAGE_NAME_ESC=$IMAGE_NAME_ESC" >> $GITHUB_ENV
+        - name: "🌩️ - Deploy"
+          run: |
+            sed -i 's/IMAGE_NAME/${{env.IMAGE_NAME_ESC}}/g' kubernetes/deployment.yml
+            kubectl create namespace ${{ github.actor }} --dry-run=client -o json | kubectl apply -f - 
+            kubectl apply -f ./kubernetes/deployment.yml --namespace=${{ github.actor }}
+            kubectl -n  ${{ github.actor }} rollout restart deployment hello-world-node-deployment
+            
+            echo "🕚  - Wait 20s for service deployment"
+            sleep 20s
+            IP_SERVICE=$(kubectl get services -n ${{ github.actor }}  -o json | jq -r '.items[] | select(.metadata.name == "hello-world-node") | .status.loadBalancer?|.ingress[]?|.ip')
+            echo "IP_SERVICE=$IP_SERVICE" >> $GITHUB_ENV
+            echo "🏁 - Service ${{ github.repository }} update in ${{github.actor}} : http://$IP_SERVICE:8080 "            
 
 ```
-
-### 5 - Add a job to deploy to Kubernetes
-
-The following job is executed once the `build_and_publish` is done (`needs`) and do the following steps:
-
-  1. Checkout the code
-  2. Login to Azure with `${{ secrets.AZURE_CREDENTIALS }}` 
-  3. Get AKS credentials using `az aks get-credentials`
-  4. Escaped the image to prepare a replacement
-  5. Replace the image name inside the kubernetes deployment file 
-  6. Apply the deployment to your kubernetes
-
-```yaml
-deploy_to_kubernetes:
-    name: "🌩️ - Deploy to Kubernetes"            
-    needs: build_and_publish
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-
-      - uses: actions/checkout@v2
-
-      # login to azure
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      # get kubernetes credentials/context    
-      - name: Get AKS Credentials
-        id: getContext
-        run: |
-          az aks get-credentials --resource-group ${{ env.AZ_RESOURCE_GROUP }} --name ${{ env.AZ_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/kubeconfig
-          echo "KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig" >> $GITHUB_ENV
-      - name: "Escaping Image Name"
-        run: |
-          IMAGE_NAME_ESC=$(echo $IMAGE_NAME_WITH_TAG | sed 's/\//\\\//g')
-          echo "IMAGE_NAME_ESC=$IMAGE_NAME_ESC" >> $GITHUB_ENV
-      - name: "🌩️ - Deploy"
-        run: |
-          sed -i 's/IMAGE_NAME/${{env.IMAGE_NAME_ESC}}/g' kubernetes/deployment.yml
-          kubectl apply -f ./kubernetes/deployment.yml 
-          echo "🏁 - Application ${{ github.repository }} deployed to kubernetes"
-```
-
-Your release workflow is now complete.
+</details>
 
 
-5- Commit and Push to main
 
 You can now commit and push your code. 
 
@@ -212,7 +189,7 @@ You can now commit and push your code.
 1- Go to the project home page, in the right menu click on "Release"
     ![](../images/img-049.png)
 
-2- Clicc "Create a new release"
+2- Click "Create a new release"
 
 3- Use a Tag and generate release notes.
 
@@ -222,12 +199,12 @@ You can now commit and push your code.
 
 The workflow will package and deploy the application to your Kubernetes.
 
-The application is deployed in the `workflow` namespace.
+The application is deployed in the `<your0github-handle>` namespace.
 
 You can list the services, that exposes the application in this namespace using the Azure Portal or using the command line:
 
 ```
-kubectl get services -n workshop
+kubectl get services -n <your-github-handle>
 ```
 
 You can use the Public IP Address and port to access the application.
