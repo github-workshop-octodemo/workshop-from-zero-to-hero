@@ -10,7 +10,9 @@ This section is designed to get you familiar with **GitHub Advanced Security** (
 
 Go to the **Settings** tab of your repository, and click on **Code security and analysis** in the left menu.
 
-**Enable** all features _(You will Set up code scanning later in this lab)_
+**Enable** all features, except "Protect Push" in the" Secret Scanning" section _(You will Set up code scanning later in this lab)_
+
+
 
 ![](../images/img-020.png)
 
