@@ -84,9 +84,11 @@ This indicates that one of the check has failed.
 
 #### Analyze the security alert.
 
-In the list of check clikc on **Details** link, this will bring you to the Pull Request Checks.
+The Code Scanning action has added new comments in the PR conversation pointing to some vulnaribility in your code.
+
 
   ![](../images/img-031.png)
+
 
 You can see 2 annotations around code scanning, one of them **High**, the other **Medium**.
 
